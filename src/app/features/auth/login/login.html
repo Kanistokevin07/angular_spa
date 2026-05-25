@@ -1,0 +1,65 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+
+    <h1 class="text-3xl font-bold text-center mb-6">
+      MPloyChek Login
+    </h1>
+
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="space-y-4"
+    >
+
+      <input
+        type="text"
+        placeholder="Username"
+        formControlName="username"
+        class="w-full border p-3 rounded-lg"
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+        class="w-full border p-3 rounded-lg"
+      />
+
+      <select
+        formControlName="role"
+        class="w-full border p-3 rounded-lg"
+      >
+        <option value="General User">
+        General User
+        </option>
+
+        <option value="Admin">
+        Admin
+        </option>
+      </select>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white p-3 rounded-lg"
+      >
+        Login
+      </button>
+
+    </form>
+
+    @if (loading) {
+  <div class="text-center mt-4">
+    Loading...
+  </div>
+}
+
+@if (errorMessage) {
+  <div class="text-red-500 text-center mt-4">
+    {{ errorMessage }}
+  </div>
+}
+
+  </div>
+
+</div>
