@@ -15,6 +15,10 @@ export class ManageUsers implements OnInit {
   users = signal<User[]>([]);
   loading = signal(false);
   selectedUser = signal<User | null>(null);
+  
+  // New UI Signal for Popups
+  toast = signal<{ message: string; type: 'success' | 'danger' | 'warning' } | null>(null);
+
   newUser = signal<Omit<User, 'id'>>({
     username: '',
     email: '',
@@ -26,6 +30,11 @@ export class ManageUsers implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  private showToast(message: string, type: 'success' | 'danger' | 'warning' = 'success') {
+    this.toast.set({ message, type });
+    setTimeout(() => this.toast.set(null), 3000);
   }
 
   loadUsers(): void {
@@ -44,14 +53,17 @@ export class ManageUsers implements OnInit {
       next: (updated) => {
         this.users.set([...updated]);
         this.newUser.set({ username: '', email: '', password: '', role: 'General User' });
+        this.showToast('User added successfully!', 'success');
       }
     });
   }
 
   deleteUser(id: number): void {
+    if(!confirm('Are you sure you want to delete this user?')) return;
     this.userService.deleteUser(id, 500).subscribe({
       next: (updated) => {
         this.users.set([...updated]);
+        this.showToast('User deleted permanently', 'danger');
       }
     });
   }
@@ -66,6 +78,7 @@ export class ManageUsers implements OnInit {
       next: (updated) => {
         this.users.set([...updated]);
         this.selectedUser.set(null);
+        this.showToast('Identity updated successfully!', 'warning');
       }
     });
   }

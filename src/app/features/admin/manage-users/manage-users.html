@@ -1,359 +1,193 @@
-<div class="min-h-screen bg-[#f8fafc] p-4 md:p-10 text-slate-900">
+<div class="min-h-screen bg-[#f8fafc] p-4 md:p-10 text-slate-900 relative">
+
+  <!-- NOTIFICATION POPUP (TOAST) -->
+  <div *ngIf="toast()" 
+       class="fixed top-10 right-10 z-[100] animate-in slide-in-from-right duration-300">
+    <div [ngClass]="{
+      'bg-emerald-600 shadow-emerald-200': toast()?.type === 'success',
+      'bg-rose-600 shadow-rose-200': toast()?.type === 'danger',
+      'bg-amber-500 shadow-amber-200': toast()?.type === 'warning'
+    }" class="flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl text-white font-bold transition-all">
+      <span class="text-xl">
+        <span *ngIf="toast()?.type === 'success'">✅</span>
+        <span *ngIf="toast()?.type === 'danger'">🗑️</span>
+        <span *ngIf="toast()?.type === 'warning'">✍️</span>
+      </span>
+      {{ toast()?.message }}
+    </div>
+  </div>
+
   <div class="max-w-7xl mx-auto space-y-10">
 
     <!-- HEADER -->
-    <header
-      class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8"
-    >
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8">
       <div>
-        <h2
-          class="text-3xl font-black tracking-tight text-slate-800 underline decoration-indigo-500/30 underline-offset-8"
-        >
+        <h2 class="text-3xl font-black tracking-tight text-slate-800 underline decoration-indigo-500/30 underline-offset-8 uppercase">
           User Management
         </h2>
-
-        <p class="text-slate-500 font-medium mt-3">
-          Configure system access and administrative privileges
-        </p>
+        <p class="text-slate-500 font-medium mt-3 italic">Administrative Directory Control</p>
       </div>
 
-      <!-- STATS -->
-      <div class="flex gap-4">
-        <div
-          class="bg-white border border-slate-200 px-6 py-3 rounded-2xl shadow-sm"
-        >
-          <p
-            class="text-[10px] font-bold uppercase tracking-widest text-slate-400"
-          >
-            Total Directory
-          </p>
-
-          <p class="text-xl font-black text-indigo-600">
-            {{ users().length }}
-          </p>
-        </div>
+      <div class="bg-white border border-slate-200 px-6 py-3 rounded-2xl shadow-sm group hover:border-indigo-400 transition-colors">
+        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-indigo-400">System Records</p>
+        <p class="text-2xl font-black text-slate-800">{{ users().length }}</p>
       </div>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
 
-      <!-- LEFT SIDE -->
-      <aside class="lg:col-span-4 space-y-6">
-
-        <!-- ADD USER -->
-        <section
-          class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden"
-        >
-          <h3 class="text-xl font-bold text-slate-800 mb-6">
+      <!-- LEFT SIDE: ADD FORM (Now Sticky) -->
+      <aside class="lg:col-span-4 sticky top-10">
+        <section class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/40 overflow-hidden relative">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-50 rounded-full opacity-50"></div>
+          
+          <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">
+            <span class="w-8 h-1 bg-indigo-600 rounded-full"></span>
             Add New Identity
           </h3>
 
-          <div class="space-y-4">
-
-            <!-- USERNAME -->
+          <div class="space-y-5">
             <div class="space-y-1">
-              <label
-                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
-              >
-                Username
-              </label>
-
-              <input
-                placeholder="johndoe"
-                [ngModel]="newUser().username"
-                (ngModelChange)="newUser.set({
-                  ...newUser(),
-                  username: $event
-                })"
-                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10"
-              />
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Username</label>
+              <input placeholder="johndoe" [ngModel]="newUser().username" (ngModelChange)="newUser.set({...newUser(), username: $event})"
+                class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:bg-white transition-all font-medium">
             </div>
 
-            <!-- EMAIL -->
             <div class="space-y-1">
-              <label
-                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
-              >
-                Email Address
-              </label>
-
-              <input
-                placeholder="name@company.com"
-                [ngModel]="newUser().email"
-                (ngModelChange)="newUser.set({
-                  ...newUser(),
-                  email: $event
-                })"
-                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10"
-              />
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
+              <input placeholder="name@company.com" [ngModel]="newUser().email" (ngModelChange)="newUser.set({...newUser(), email: $event})"
+                class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:bg-white transition-all font-medium">
             </div>
 
-            <!-- PASSWORD -->
             <div class="space-y-1">
-              <label
-                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
-              >
-                Password
-              </label>
-
-              <input
-                type="password"
-                placeholder="••••••••"
-                [ngModel]="newUser().password"
-                (ngModelChange)="newUser.set({
-                  ...newUser(),
-                  password: $event
-                })"
-                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10"
-              />
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Access Credentials</label>
+              <input type="password" placeholder="••••••••" [ngModel]="newUser().password" (ngModelChange)="newUser.set({...newUser(), password: $event})"
+                class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:bg-white transition-all font-medium">
             </div>
 
-            <!-- ROLE -->
             <div class="space-y-1">
-              <label
-                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
-              >
-                Role Type
-              </label>
-
-              <select
-                [ngModel]="newUser().role"
-                (ngModelChange)="newUser.set({
-                  ...newUser(),
-                  role: $event
-                })"
-                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none cursor-pointer focus:ring-4 focus:ring-indigo-500/10"
-              >
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">System Role</label>
+              <select [ngModel]="newUser().role" (ngModelChange)="newUser.set({...newUser(), role: $event})"
+                class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none cursor-pointer focus:ring-4 focus:ring-indigo-500/10 transition-all font-bold appearance-none">
                 <option value="Admin">🛡️ Admin</option>
                 <option value="General User">👤 General User</option>
               </select>
             </div>
 
-            <!-- BUTTON -->
-            <button
-              type="button"
-              (click)="addUser()"
-              class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-200"
-            >
-              Add to Directory
+            <button type="button" (click)="addUser()"
+              class="w-full mt-4 bg-slate-900 hover:bg-indigo-600 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-indigo-100 uppercase tracking-widest text-xs active:scale-95">
+              Confirm Registration
             </button>
-
           </div>
         </section>
-
-        <!-- EDIT USER -->
-        <section
-          *ngIf="selectedUser()"
-          class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl"
-        >
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-white">
-              Edit Profile
-            </h3>
-
-            <span
-              class="text-[10px] bg-indigo-500 text-white px-2 py-1 rounded-full font-black uppercase"
-            >
-              Editing
-            </span>
-          </div>
-
-          <div class="space-y-4">
-
-            <!-- EDIT USERNAME -->
-            <input
-              [ngModel]="selectedUser()?.username"
-              (ngModelChange)="selectedUser.set({
-                ...selectedUser()!,
-                username: $event
-              })"
-              class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white outline-none"
-            />
-
-            <!-- EDIT EMAIL -->
-            <input
-              [ngModel]="selectedUser()?.email"
-              (ngModelChange)="selectedUser.set({
-                ...selectedUser()!,
-                email: $event
-              })"
-              class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white outline-none"
-            />
-
-            <!-- EDIT ROLE -->
-            <select
-              [ngModel]="selectedUser()?.role"
-              (ngModelChange)="selectedUser.set({
-                ...selectedUser()!,
-                role: $event
-              })"
-              class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white outline-none"
-            >
-              <option value="Admin">Admin</option>
-              <option value="General User">General User</option>
-            </select>
-
-            <!-- UPDATE BUTTON -->
-            <button
-              type="button"
-              (click)="updateUser()"
-              class="w-full bg-white hover:bg-indigo-400 hover:text-white text-slate-900 font-bold py-3 rounded-xl transition-all"
-            >
-              Update Identity
-            </button>
-
-          </div>
-        </section>
-
       </aside>
 
-      <!-- RIGHT SIDE -->
+      <!-- RIGHT SIDE: TABLE -->
       <main class="lg:col-span-8">
-
-        <!-- LOADING -->
-        <div
-          *ngIf="loading()"
-          class="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border border-dashed border-slate-300"
-        >
-          <div
-            class="h-12 w-12 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin"
-          ></div>
-
-          <p class="mt-4 text-slate-500 font-bold italic">
-            Fetching directory...
-          </p>
+        <div *ngIf="loading()" class="flex flex-col items-center justify-center py-32 bg-white rounded-[2.5rem] border border-dashed border-slate-300 animate-pulse">
+          <div class="h-16 w-16 border-4 border-indigo-600/10 border-t-indigo-600 rounded-full animate-spin"></div>
+          <p class="mt-6 text-slate-400 font-bold tracking-widest uppercase text-xs">Accessing Database...</p>
         </div>
 
-        <!-- TABLE -->
-        <div
-          *ngIf="!loading()"
-          class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden"
-        >
+        <div *ngIf="!loading()" class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
-
             <table class="w-full text-left border-collapse">
-
               <thead>
                 <tr class="bg-slate-50 border-b border-slate-100">
-
-                  <th
-                    class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400"
-                  >
-                    User Details
-                  </th>
-
-                  <th
-                    class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400"
-                  >
-                    Access Level
-                  </th>
-
-                  <th
-                    class="px-6 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400"
-                  >
-                    Actions
-                  </th>
-
+                  <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">User Profile</th>
+                  <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Security Rank</th>
+                  <th class="px-8 py-6 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Controls</th>
                 </tr>
               </thead>
-
               <tbody class="divide-y divide-slate-100">
-
-                <tr
-                  *ngFor="let u of users()"
-                  class="hover:bg-slate-50 transition-all"
-                >
-
-                  <!-- USER -->
-                  <td class="px-6 py-5">
+                <tr *ngFor="let u of users()" class="group hover:bg-indigo-50/30 transition-all">
+                  <td class="px-8 py-6">
                     <div class="flex items-center gap-4">
-
-                      <div
-                        class="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black uppercase"
-                      >
+                      <div class="h-12 w-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 font-black shadow-sm group-hover:border-indigo-200">
                         {{ u.username.charAt(0) }}
                       </div>
-
                       <div>
-                        <div class="font-bold text-slate-800">
-                          {{ u.username }}
-                        </div>
-
-                        <div class="text-xs text-slate-400">
-                          {{ u.email }}
-                        </div>
+                        <div class="font-bold text-slate-800 text-base tracking-tight group-hover:text-indigo-700 transition-colors">{{ u.username }}</div>
+                        <div class="text-xs text-slate-400 font-medium">{{ u.email }}</div>
                       </div>
-
                     </div>
                   </td>
-
-                  <!-- ROLE -->
-                  <td class="px-6 py-5">
-
-                    <span
-                      class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase"
-                      [ngClass]="{
-                        'bg-emerald-50 text-emerald-700':
-                          u.role === 'General User',
-
-                        'bg-rose-50 text-rose-700':
-                          u.role === 'Admin'
-                      }"
-                    >
+                  <td class="px-8 py-6">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm ring-1 ring-inset"
+                      [ngClass]="{'bg-emerald-50 text-emerald-700 ring-emerald-200': u.role === 'General User', 'bg-rose-50 text-rose-700 ring-rose-200': u.role === 'Admin'}">
                       {{ u.role }}
                     </span>
-
                   </td>
-
-                  <!-- ACTIONS -->
-                  <td class="px-6 py-5">
-
-                    <div class="flex justify-end gap-2">
-
-                      <!-- EDIT -->
-                      <button
-                        type="button"
-                        (click)="editUser(u)"
-                        class="px-4 py-2 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-all font-semibold"
-                      >
-                        Edit
+                  <td class="px-8 py-6">
+                    <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                      <button (click)="editUser(u)" class="h-10 w-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-amber-500 hover:bg-amber-500 hover:text-white transition-all shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                       </button>
-
-                      <!-- DELETE -->
-                      <button
-                        type="button"
-                        (click)="deleteUser(u.id)"
-                        class="px-4 py-2 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 transition-all font-semibold"
-                      >
-                        Delete
+                      <button (click)="deleteUser(u.id)" class="h-10 w-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                       </button>
-
                     </div>
-
                   </td>
-
                 </tr>
-
               </tbody>
-
             </table>
-
           </div>
-
-          <!-- EMPTY -->
-          <div
-            *ngIf="users().length === 0"
-            class="p-20 text-center"
-          >
-            <p class="text-slate-400 font-medium">
-              No users found in the system database.
-            </p>
+          <div *ngIf="users().length === 0" class="p-24 text-center">
+            <div class="text-slate-200 mb-4 flex justify-center">
+              <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Directory is currently empty</p>
           </div>
-
         </div>
-
       </main>
-
     </div>
   </div>
+
+  <!-- POPUP MODAL FOR EDITING (Fixes the "lower than add" problem) -->
+  <div *ngIf="selectedUser()" class="fixed inset-0 z-[110] flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div (click)="selectedUser.set(null)" class="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"></div>
+    
+    <!-- Modal Content -->
+    <section class="relative bg-slate-900 w-full max-w-lg p-10 rounded-[3rem] border border-slate-700 shadow-2xl animate-in zoom-in-95 duration-300">
+      <div class="flex justify-between items-center mb-10">
+        <div>
+          <h3 class="text-2xl font-black text-white">Modify Identity</h3>
+          <p class="text-slate-400 text-xs mt-1">Updating record #{{selectedUser()?.id}}</p>
+        </div>
+        <button (click)="selectedUser.set(null)" class="text-slate-400 hover:text-white transition-colors">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-1">Username</label>
+          <input [ngModel]="selectedUser()?.username" (ngModelChange)="selectedUser.set({...selectedUser()!, username: $event})"
+            class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:bg-white/10 focus:border-indigo-500 transition-all font-bold">
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-1">Email Address</label>
+          <input [ngModel]="selectedUser()?.email" (ngModelChange)="selectedUser.set({...selectedUser()!, email: $event})"
+            class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:bg-white/10 focus:border-indigo-500 transition-all font-bold">
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-1">Assigned Role</label>
+          <select [ngModel]="selectedUser()?.role" (ngModelChange)="selectedUser.set({...selectedUser()!, role: $event})"
+            class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:bg-white/10 focus:border-indigo-500 transition-all font-black">
+            <option value="Admin">Admin</option>
+            <option value="General User">General User</option>
+          </select>
+        </div>
+
+        <button type="button" (click)="updateUser()"
+          class="w-full bg-white hover:bg-indigo-500 hover:text-white text-slate-900 font-black py-5 rounded-2xl transition-all shadow-2xl uppercase tracking-widest text-xs mt-4">
+          Save New Identity Changes
+        </button>
+      </div>
+    </section>
+  </div>
+
 </div>
