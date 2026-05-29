@@ -13,6 +13,10 @@ export class AuthService {
 
   currentUser: User | null = null;
 
+  constructor(){
+    this.currentUser = this.getCurrentUser();
+  }
+
   login(
     username: string,
     password: string,
