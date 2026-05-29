@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
+import { Component, signal } from '@angular/core';
+
 import {
   FormBuilder,
   FormGroup,
@@ -25,12 +25,13 @@ import { AuthService } from '../../../core/services/auth';
 export class Login {
 
   loginForm: FormGroup;
-  loading = false;
-  errorMessage = '';
+
+  // SIGNALS
+  loading = signal(false);
+  errorMessage = signal('');
 
   constructor(
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private router: Router
   ) {
@@ -42,47 +43,51 @@ export class Login {
     });
   }
 
-    onSubmit() {
+  onSubmit(): void {
 
-  if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) return;
 
-  this.loading = true;
-  this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
 
-  const { username, password, role } =
-    this.loginForm.value;
+    const { username, password, role } =
+      this.loginForm.value;
 
-  this.authService
-    .login(username, password, role)
-    .subscribe({
-      next: (user) => {
+    this.authService
+      .login(username, password, role)
+      .subscribe({
 
-        if (user !== null) {
+        next: (user) => {
 
-          if (user.role === 'Admin') {
-            this.router.navigate(['/admin']);
+          this.loading.set(false);
+
+          if (user) {
+
+            if (user.role === 'Admin') {
+
+              this.router.navigate(['/admin']);
+
+            } else {
+
+              this.router.navigate(['/dashboard']);
+            }
+
           } else {
-            this.router.navigate(['/dashboard']);
+
+            this.errorMessage.set(
+              'Invalid Credentials'
+            );
           }
+        },
 
-        } else {
+        error: () => {
 
-          this.errorMessage =
-            'Invalid Credentials';
-          this.cdr.detectChanges();
+          this.loading.set(false);
+
+          this.errorMessage.set(
+            'Something went wrong'
+          );
         }
-
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-
-      error: () => {
-
-        this.errorMessage =
-          'Something went wrong';
-
-        this.loading = false;
-      }
-    });
-}
+      });
+  }
 }

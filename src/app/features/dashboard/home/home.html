@@ -3,73 +3,153 @@
 
     <!-- HEADER -->
     <header class="relative overflow-hidden bg-slate-900 rounded-3xl p-1 shadow-2xl shadow-indigo-200/50">
-      <!-- Subtle Decorative Gradient Glow -->
+
       <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-3xl rounded-full"></div>
-      
+
       <div class="relative flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900 p-6 md:p-8 rounded-[1.4rem] border border-slate-800">
+
         <div>
-          <h2 class="text-3xl font-extrabold tracking-tight text-white leading-none">Dashboard</h2>
-          <p class="text-slate-400 mt-2 text-sm font-medium tracking-wide">Welcome back to your workspace</p>
+          <h2 class="text-3xl font-extrabold tracking-tight text-white leading-none">
+            Dashboard
+          </h2>
+
+          <p class="text-slate-400 mt-2 text-sm font-medium tracking-wide">
+            Welcome back to your workspace
+          </p>
         </div>
 
         <div class="flex items-center gap-5">
+
           <div class="flex flex-col items-end hidden sm:flex">
-            <span class="text-white font-semibold text-sm">{{ user?.username }}</span>
-            <span class="text-indigo-400 text-xs font-bold uppercase tracking-widest">{{ user?.role }}</span>
+            <span class="text-white font-semibold text-sm">
+              {{ user()?.username }}
+            </span>
+
+            <span class="text-indigo-400 text-xs font-bold uppercase tracking-widest">
+              {{ user()?.role }}
+            </span>
           </div>
 
           <button
             class="group flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 border border-red-500/20"
             (click)="logout()"
           >
+
             <span>Logout</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-4 w-4 group-hover:translate-x-1 transition-transform"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+
             </svg>
           </button>
+
         </div>
       </div>
     </header>
 
-    <!-- STATS CARDS -->
+    <!-- STATS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- Card 1 -->
-      <div class="group bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Records</p>
-            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">{{ records.length }}</h3>
-          </div>
-          <div class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 group-hover:scale-110 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Card 2 -->
+      <!-- TOTAL -->
       <div class="group bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
+
         <div class="flex justify-between items-start">
+
           <div>
-            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Active Users</p>
+            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
+              Total Records
+            </p>
+
             <h3 class="text-4xl font-black text-slate-800 tracking-tighter">
-              {{ records.filter(r => r.status === 'Active').length }}
+              {{ totalRecords() }}
             </h3>
           </div>
-          <div class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 group-hover:scale-110 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+
+          <div class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 group-hover:scale-110 transition-transform">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+
+            </svg>
+
           </div>
         </div>
       </div>
 
-      <!-- Card 3 -->
+      <!-- ACTIVE -->
+      <div class="group bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
+
+        <div class="flex justify-between items-start">
+
+          <div>
+            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
+              Active Users
+            </p>
+
+            <h3 class="text-4xl font-black text-slate-800 tracking-tighter">
+              {{ activeUsers() }}
+            </h3>
+          </div>
+
+          <div class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 group-hover:scale-110 transition-transform">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+
+            </svg>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLE -->
       <div class="group bg-indigo-600 p-7 rounded-3xl shadow-xl shadow-indigo-200 transition-all duration-300 hover:bg-indigo-700">
-        <p class="text-indigo-100 text-xs font-bold uppercase tracking-widest mb-1">Role Access</p>
+
+        <p class="text-indigo-100 text-xs font-bold uppercase tracking-widest mb-1">
+          Role Access
+        </p>
+
         <h3 class="text-3xl font-bold text-white tracking-tight">
-          {{ user?.role }}
+          {{ user()?.role }}
         </h3>
+
         <div class="mt-4 text-indigo-200 text-xs flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2.166 4.9L10 1.154l7.834 3.746A1 1 0 0118.5 5.79v6.245a1 1 0 01-.582.914l-7.418 3.528a1 1 0 01-.894 0l-7.418-3.528a1 1 0 01-.582-.914V5.79a1 1 0 01.594-.89zM10 3.183L4.5 5.82v5.511l5.5 2.614 5.5-2.614V5.82L10 3.183z" clip-rule="evenodd" /></svg>
+
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-4 w-4"
+               viewBox="0 0 20 20"
+               fill="currentColor">
+
+            <path fill-rule="evenodd"
+                  d="M2.166 4.9L10 1.154l7.834 3.746A1 1 0 0118.5 5.79v6.245a1 1 0 01-.582.914l-7.418 3.528a1 1 0 01-.894 0l-7.418-3.528a1 1 0 01-.582-.914V5.79a1 1 0 01.594-.89zM10 3.183L4.5 5.82v5.511l5.5 2.614 5.5-2.614V5.82L10 3.183z"
+                  clip-rule="evenodd" />
+
+          </svg>
+
           Secure Session
         </div>
       </div>
@@ -77,55 +157,102 @@
     </div>
 
     <!-- LOADING -->
-    <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 animate-pulse">
+    <div *ngIf="loading()"
+         class="flex flex-col items-center justify-center py-20 animate-pulse">
+
       <div class="relative flex items-center justify-center">
+
         <div class="h-16 w-16 rounded-full border-4 border-slate-200"></div>
+
         <div class="absolute h-16 w-16 rounded-full border-t-4 border-indigo-600 animate-spin"></div>
+
       </div>
-      <span class="mt-4 text-slate-500 font-semibold italic">Fetching latest data...</span>
+
+      <span class="mt-4 text-slate-500 font-semibold italic">
+        Fetching latest data...
+      </span>
+
     </div>
 
     <!-- EMPTY -->
-    <div *ngIf="!loading && records && records.length === 0"
+    <div *ngIf="!loading() && records().length === 0"
          class="bg-white border-2 border-dashed border-slate-200 text-center p-16 rounded-3xl shadow-sm">
-      <div class="bg-slate-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
-      </div>
-      <h3 class="text-xl font-bold text-slate-700">No records found</h3>
-      <p class="text-slate-400 max-w-xs mx-auto mt-2">Your database currently has no records to display.</p>
+
+      <h3 class="text-xl font-bold text-slate-700">
+        No records found
+      </h3>
+
+      <p class="text-slate-400 max-w-xs mx-auto mt-2">
+        Your database currently has no records to display.
+      </p>
+
     </div>
 
     <!-- TABLE -->
-    <div *ngIf="!loading && records && records.length > 0"
+    <div *ngIf="!loading() && records().length > 0"
          class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
 
       <div class="overflow-x-auto">
+
         <table class="w-full text-left border-collapse">
+
           <thead>
             <tr class="bg-slate-50/50 border-b border-slate-100">
-              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">ID</th>
-              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">Name</th>
-              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">Role</th>
-              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">Status</th>
+
+              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">
+                ID
+              </th>
+
+              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">
+                Name
+              </th>
+
+              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500">
+                Role
+              </th>
+
+              <th class="px-6 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">
+                Status
+              </th>
+
             </tr>
           </thead>
 
           <tbody class="divide-y divide-slate-100">
-            <tr *ngFor="let r of records" class="group hover:bg-slate-50/80 transition-all duration-200">
+
+            <tr *ngFor="let r of records()"
+                class="group hover:bg-slate-50/80 transition-all duration-200">
+
               <td class="px-6 py-5">
-                <span class="font-mono text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-md">#{{ r.id }}</span>
+                <span class="font-mono text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
+                  #{{ r.id }}
+                </span>
               </td>
+
               <td class="px-6 py-5">
+
                 <div class="flex items-center gap-3">
+
                   <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs uppercase">
                     {{ r.name.charAt(0) }}
                   </div>
-                  <span class="font-bold text-slate-700 tracking-tight">{{ r.name }}</span>
+
+                  <span class="font-bold text-slate-700 tracking-tight">
+                    {{ r.name }}
+                  </span>
+
                 </div>
+
               </td>
-              <td class="px-6 py-5 text-slate-600 font-medium">{{ r.role }}</td>
+
+              <td class="px-6 py-5 text-slate-600 font-medium">
+                {{ r.role }}
+              </td>
+
               <td class="px-6 py-5">
+
                 <div class="flex justify-center">
+
                   <span
                     class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full ring-1 ring-inset"
                     [ngClass]="{
@@ -133,23 +260,26 @@
                       'bg-rose-50 text-rose-700 ring-rose-600/20': r.status === 'Inactive'
                     }"
                   >
-                    <span class="h-1.5 w-1.5 rounded-full" [ngClass]="r.status === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'"></span>
+
+                    <span
+                      class="h-1.5 w-1.5 rounded-full"
+                      [ngClass]="r.status === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'"
+                    ></span>
+
                     {{ r.status }}
+
                   </span>
+
                 </div>
+
               </td>
+
             </tr>
+
           </tbody>
+
         </table>
-      </div>
-      
-      <!-- Footer/Pagination Placeholder -->
-      <div class="bg-slate-50/50 px-6 py-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400 font-medium">
-        <span>Showing {{ records.length }} entries</span>
-        <div class="flex gap-2">
-           <button class="px-3 py-1 border border-slate-200 rounded-md bg-white hover:bg-slate-50">Previous</button>
-           <button class="px-3 py-1 border border-slate-200 rounded-md bg-white hover:bg-slate-50">Next</button>
-        </div>
+
       </div>
     </div>
 

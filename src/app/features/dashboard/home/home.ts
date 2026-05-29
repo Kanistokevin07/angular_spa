@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
 import { DataService } from '../../../core/services/data-service';
 import { AuthService } from '../../../core/services/auth';
-import { Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -14,49 +14,58 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class Home implements OnInit {
 
-  user: any = null;
-  records: any[] = [];
-  loading = false;
+  // SIGNALS
+  user = signal<any>(null);
+  records = signal<any[]>([]);
+  loading = signal(false);
+
+  // COMPUTED SIGNALS
+  totalRecords = computed(() => this.records().length);
+
+  activeUsers = computed(() =>
+    this.records().filter(r => r.status === 'Active').length
+  );
 
   constructor(
     private dataService: DataService,
     private authService: AuthService,
-    private router: Router,
-     private cdr: ChangeDetectorRef
+    private router: Router
   ) {}
 
   ngOnInit(): void {
 
-    console.log('HOME COMPONENT LOADED');
-    // STEP 1: get logged user
-    this.user = this.authService.getCurrentUser();
+    // Logged user
+    this.user.set(this.authService.getCurrentUser());
 
-    // STEP 2: show loading
-    this.loading = true;
+    // Loading start
+    this.loading.set(true);
 
-    // STEP 3: fake API call
-    this.dataService.getRecords().subscribe(data => {
+    // Fake async API
+    this.dataService.getRecords().subscribe({
 
-      console.log('SUBSCRIBE FIRED');
-      console.log('DATA RECEIVED:', data);
+      next: (data) => {
 
-      // STEP 4: role-based filtering
-      if (this.user?.role === 'Admin') {
-        this.records = data;
-      } else {
-        this.records = data.filter(r => r.role === 'User');
+        // ROLE BASED FILTERING
+        if (this.user()?.role === 'Admin') {
+          this.records.set([...data]);
+        } else {
+
+          const filtered =
+            data.filter(r => r.role === 'User');
+
+          this.records.set([...filtered]);
+        }
+
+        this.loading.set(false);
+      },
+
+      error: () => {
+        this.loading.set(false);
       }
-
-      
-
-      console.log('records:', this.records);
-
-      this.loading = false;
-      this.cdr.detectChanges();
     });
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/']);
   }

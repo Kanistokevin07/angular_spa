@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
-
 import { UserService } from '../../../core/services/user-service';
 import { User } from '../../../core/models/user.model';
 
@@ -14,94 +12,61 @@ import { User } from '../../../core/models/user.model';
   styleUrl: './manage-users.css',
 })
 export class ManageUsers implements OnInit {
-
-  users: User[] = [];
-  loading = false;
-
-  // CREATE USER
-  newUser: Omit<User, 'id'> = {
+  users = signal<User[]>([]);
+  loading = signal(false);
+  selectedUser = signal<User | null>(null);
+  newUser = signal<Omit<User, 'id'>>({
     username: '',
     email: '',
     password: '',
     role: 'General User'
-  };
+  });
 
-  // EDIT USER
-  selectedUser: User | null = null;
-  editMode = false;
-
-  constructor(
-    private userService: UserService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  // READ
   loadUsers(): void {
-    this.loading = true;
-
-    this.userService.getUsers().subscribe(data => {
-      this.users = [...data];
-      this.loading = false;
-
-      this.cdr.detectChanges();
+    this.loading.set(true);
+    this.userService.getUsers(1000).subscribe({
+      next: (data) => {
+        this.users.set([...data]);
+        this.loading.set(false);
+      }
     });
   }
 
-  // CREATE
   addUser(): void {
-    if (!this.newUser.username || !this.newUser.email) return;
-
-    const userToAdd: User = {
-      ...this.newUser,
-      id: Date.now()
-    };
-
-    this.userService.addUser(userToAdd).subscribe((updated) => {
-      this.users = [...updated];
-
-      this.newUser = {
-        username: '',
-        email: '',
-        password: '',
-        role: 'General User'
-      };
-
-      this.cdr.detectChanges();
+    if (!this.newUser().username || !this.newUser().email) return;
+    this.userService.addUser(this.newUser(), 800).subscribe({
+      next: (updated) => {
+        this.users.set([...updated]);
+        this.newUser.set({ username: '', email: '', password: '', role: 'General User' });
+      }
     });
   }
 
-  // DELETE
   deleteUser(id: number): void {
-    this.userService.deleteUser(id).subscribe((updated) => {
-      this.users = [...updated];
-
-      this.cdr.detectChanges();
+    this.userService.deleteUser(id, 500).subscribe({
+      next: (updated) => {
+        this.users.set([...updated]);
+      }
     });
   }
 
-  // EDIT
   editUser(user: User): void {
-    this.selectedUser = { ...user };
-    this.editMode = true;
-
-    this.cdr.detectChanges();
+    this.selectedUser.set({ ...user });
   }
 
-  // UPDATE
   updateUser(): void {
-    if (!this.selectedUser) return;
-
-    this.userService.updateUser(this.selectedUser).subscribe((updated) => {
-      this.users = [...updated];
-
-      this.selectedUser = null;
-      this.editMode = false;
-
-      this.cdr.detectChanges();
+    if (!this.selectedUser()) return;
+    this.userService.updateUser(this.selectedUser()!, 800).subscribe({
+      next: (updated) => {
+        this.users.set([...updated]);
+        this.selectedUser.set(null);
+      }
     });
   }
 }

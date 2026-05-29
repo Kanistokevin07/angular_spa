@@ -5,12 +5,15 @@
 
     <!-- HEADER -->
     <div class="text-center space-y-2">
+
       <h1 class="text-3xl font-bold text-gray-800">
         Welcome Back
       </h1>
+
       <p class="text-gray-500 text-sm">
         Sign in to your MPloyChek dashboard
       </p>
+
     </div>
 
     <!-- FORM -->
@@ -22,56 +25,90 @@
 
       <!-- USERNAME -->
       <div>
-        <label class="text-sm text-gray-600">User ID</label>
+
+        <label class="text-sm text-gray-600">
+          User ID
+        </label>
+
         <input
           type="text"
           formControlName="username"
           placeholder="Enter your user ID"
           class="w-full mt-1 p-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
         />
+
       </div>
 
       <!-- PASSWORD -->
       <div>
-        <label class="text-sm text-gray-600">Password</label>
+
+        <label class="text-sm text-gray-600">
+          Password
+        </label>
+
         <input
           type="password"
           formControlName="password"
           placeholder="Enter password"
           class="w-full mt-1 p-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
         />
+
       </div>
 
       <!-- ROLE -->
       <div>
-        <label class="text-sm text-gray-600">Role</label>
+
+        <label class="text-sm text-gray-600">
+          Role
+        </label>
 
         <select
           formControlName="role"
           class="w-full mt-1 p-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
         >
-          <option value="General User">General User</option>
-          <option value="Admin">Admin</option>
+          <option value="General User">
+            General User
+          </option>
+
+          <option value="Admin">
+            Admin
+          </option>
         </select>
+
       </div>
 
       <!-- ERROR -->
-      <div *ngIf="errorMessage" class="text-red-500 text-sm text-center">
-        {{ errorMessage }}
+      <div
+        *ngIf="errorMessage()"
+        class="text-red-500 text-sm text-center"
+      >
+        {{ errorMessage() }}
       </div>
 
       <!-- BUTTON -->
       <button
         type="submit"
-        [disabled]="loading"
+        [disabled]="loading()"
         class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-3 rounded-lg font-medium shadow-md hover:shadow-lg transition disabled:opacity-60"
       >
-        <span *ngIf="!loading">Login</span>
 
-        <span *ngIf="loading" class="flex items-center justify-center gap-2">
-          <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        <!-- NORMAL -->
+        <span *ngIf="!loading()">
+          Login
+        </span>
+
+        <!-- LOADING -->
+        <span
+          *ngIf="loading()"
+          class="flex items-center justify-center gap-2"
+        >
+          <div
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></div>
+
           Authenticating...
         </span>
+
       </button>
 
     </form>
