@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { UserService } from '../../../core/services/user-service';
 import { User } from '../../../core/models/user.model';
@@ -29,7 +30,10 @@ export class ManageUsers implements OnInit {
   selectedUser: User | null = null;
   editMode = false;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -40,8 +44,10 @@ export class ManageUsers implements OnInit {
     this.loading = true;
 
     this.userService.getUsers().subscribe(data => {
-      this.users = [...data];   // IMPORTANT: force new reference
+      this.users = [...data];
       this.loading = false;
+
+      this.cdr.detectChanges();
     });
   }
 
@@ -55,29 +61,34 @@ export class ManageUsers implements OnInit {
     };
 
     this.userService.addUser(userToAdd).subscribe((updated) => {
-      this.users = [...updated];   // instant UI update
+      this.users = [...updated];
 
-      // reset form
       this.newUser = {
         username: '',
         email: '',
         password: '',
         role: 'General User'
       };
+
+      this.cdr.detectChanges();
     });
   }
 
   // DELETE
   deleteUser(id: number): void {
     this.userService.deleteUser(id).subscribe((updated) => {
-      this.users = [...updated];   // NO filter needed here
+      this.users = [...updated];
+
+      this.cdr.detectChanges();
     });
   }
 
   // EDIT
   editUser(user: User): void {
-    this.editMode = true;
     this.selectedUser = { ...user };
+    this.editMode = true;
+
+    this.cdr.detectChanges();
   }
 
   // UPDATE
@@ -85,9 +96,12 @@ export class ManageUsers implements OnInit {
     if (!this.selectedUser) return;
 
     this.userService.updateUser(this.selectedUser).subscribe((updated) => {
-      this.users = [...updated];   // consistent update pattern
-      this.editMode = false;
+      this.users = [...updated];
+
       this.selectedUser = null;
+      this.editMode = false;
+
+      this.cdr.detectChanges();
     });
   }
 }
