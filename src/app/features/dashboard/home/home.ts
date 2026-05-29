@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { DataService } from '../../../core/services/data-service';
 import { AuthService } from '../../../core/services/auth';
@@ -8,16 +9,20 @@ import { AuthService } from '../../../core/services/auth';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
+
+
+
 export class Home implements OnInit {
 
   // SIGNALS
   user = signal<any>(null);
   records = signal<any[]>([]);
   loading = signal(false);
+  isAdmin = false;
 
   // COMPUTED SIGNALS
   totalRecords = computed(() => this.records().length);
@@ -36,6 +41,7 @@ export class Home implements OnInit {
 
     // Logged user
     this.user.set(this.authService.getCurrentUser());
+    
 
     // Loading start
     this.loading.set(true);
@@ -47,6 +53,7 @@ export class Home implements OnInit {
 
         // ROLE BASED FILTERING
         if (this.user()?.role === 'Admin') {
+          this.isAdmin = true;
           this.records.set([...data]);
         } else {
 

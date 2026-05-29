@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user-service';
 import { User } from '../../../core/models/user.model';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-manage-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './manage-users.html',
   styleUrl: './manage-users.css',
 })
@@ -26,7 +28,11 @@ export class ManageUsers implements OnInit {
     role: 'General User'
   });
 
-  constructor(private userService: UserService) {}
+  constructor(
+  private userService: UserService,
+  private authService: AuthService,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -82,4 +88,9 @@ export class ManageUsers implements OnInit {
       }
     });
   }
+
+  logout(): void {
+  this.authService.logout();
+  this.router.navigate(['/']);
+}
 }

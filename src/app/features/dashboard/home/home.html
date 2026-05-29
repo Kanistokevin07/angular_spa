@@ -36,6 +36,7 @@
           >
 
             <span>Logout</span>
+            
 
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="h-4 w-4 group-hover:translate-x-1 transition-transform"
@@ -50,6 +51,14 @@
 
             </svg>
           </button>
+          <!-- ONLY ADMIN CAN SEE -->
+  <button
+    *ngIf="isAdmin"
+    routerLink="/admin"
+    class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl font-bold transition-all"
+  >
+    Admin Panel
+  </button>
 
         </div>
       </div>
